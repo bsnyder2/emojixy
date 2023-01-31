@@ -1,46 +1,51 @@
 class Matrix {
     constructor(xMin, xMax, yMin, yMax) {
         this.xMin = xMin;
-        this.xMax = xMax;
         this.yMin = yMin;
-        this.yMax = yMax;
-        this.matrix = [];
+        this.xDim = xMax - xMin + 1;
+        this.yDim = yMax - yMin + 1;
+
+        // create empty 2d empty array of size xDim x yDim
+        this.matrix = new Array(this.xDim);
+        for (let x = 0; x < this.xDim; x++) {
+            this.matrix[x] = new Array(this.yDim);
+        }
     }
 
     fill(fun) {
-        for (let x = this.xMin; x < this.xMax + 1; x++) {
-            this.matrix.push([]);
-
-            for (let y = this.yMin; y < this.yMax + 1; y++) {
-                let value = 0;
-                if (fun(x) >= y) {
-                    value = 1;
+        // fill area <= function
+        for (let x = 0; x < this.xDim; x++) {
+            for (let y = 0; y < this.yDim; y++) {
+                let isFilled = false;
+                if (fun(x + this.xMin) >= (y + this.yMin)) {
+                    isFilled = true;
                 }
-                this.matrix[x - this.xMin].push(value);
+                this.matrix[x][y] = isFilled;
             }
         }
     }
 
     display(symbol) {
         let output = "";
-        for (let y = this.yMax; y > this.yMin - 1; y--) {
-            for (const row of this.matrix) {
-                if (row[y] == 1) {
-                    output += symbol + "";
+        // print each row from top down
+        for (let y = this.yDim - 1; y > -1; y--) {
+            for (let x = 0; x < this.xDim; x++) {
+                if (this.matrix[x][y]) {
+                    output += "% ";
                 } else {
-                    output += "\u{2796}";
+                    output += symbol + " ";
                 }
             }
-            output += "\n";
+            output += ` ${y}\n`;
         }
         console.log(output);
     }
 }
 
 function fun(x) {
-    return 4 - x / 3;
+    return x / 2 + 3;
 }
 
-const m = new Matrix(0, 10, 0, 10);
+let m = new Matrix(0, 10, 0, 10);
 m.fill(fun);
-m.display("\u{2b50}");
+m.display(".");
