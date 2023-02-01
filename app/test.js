@@ -36,16 +36,16 @@ class Matrix {
                     output += symbol + " ";
                 }
             }
-            output += ` ${y}\n`;
+            output += ` ${y + this.yMin}\n`;
         }
         console.log(output);
     }
 }
 
 function fun(x) {
-    return x / 2 + 3;
+    return 2 * x - 10;
 }
 
-let m = new Matrix(0, 10, 0, 10);
+let m = new Matrix(0, 10, -5, 5);
 m.fill(fun);
 m.display(".");
